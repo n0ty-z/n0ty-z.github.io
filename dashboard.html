@@ -1,1 +1,155 @@
-OS X
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 100vw;
+    min-height: 100vh;
+    background-repeat: repeat;
+    background-size: auto;
+    transition: background-image 0.3s ease;
+  }
+
+  body {
+    background-image: url('/assets/dashboard/defaultdesktop@2x.png');
+  }
+
+  body[data-theme="dark"] {
+    background-image: url('/assets/dashboard/ecsb_background_tile@2x.png');
+  }
+
+  #exit-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 64px;
+    height: 64px;
+    cursor: pointer;
+    z-index: 100;
+    opacity: 0.85;
+    transition: opacity 0.15s;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+
+
+  #exit-btn:active {
+    transform: scale(0.97);
+  }
+
+  #stickies-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  #poof-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  #poof-overlay.active {
+    display: flex;
+  }
+
+  .poof-sprite {
+    position: fixed;
+    top: 50%;
+    left: 55%;
+    width: 160vmax;
+    height: 160vmax;
+    transform: translate(-50%, -50%);
+    background-image: url('/assets/dock/poof@2x.png');
+    background-size: 100% 500%;
+    background-position: center 0%;
+    background-repeat: no-repeat;
+    animation: poof-play 0.35s steps(1) forwards;
+  }
+
+  @keyframes poof-play {
+    0%   { background-position: center 0%; }
+    10%  { background-position: center 0%; }
+    55%  { background-position: center 25%; }
+    70%  { background-position: center 50%; }
+    85%  { background-position: center 75%; }
+    100% { background-position: center 100%; }
+  }
+</style>
+</head>
+<body>
+
+<img id="toggle-img" src="/assets/dashboard/lightmodelight.png" style="position:fixed;bottom:24px;left:24px;width:64px;height:64px;cursor:pointer;z-index:100;opacity:0.85;-webkit-user-drag:none;" draggable="false">
+
+<div id="stickies-container">
+</div>
+
+<img
+  id="exit-btn"
+  src="/assets/dashboard/evilexitarrow@2x.png"
+  alt=""
+  draggable="false"
+  onclick="window.location.href='index.html'"
+>
+
+<script>
+  const body = document.body;
+  const toggle = document.getElementById('toggle-img');
+
+  const saved = localStorage.getItem('site-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initial = saved || (prefersDark ? 'dark' : 'light');
+
+  const BASE = '/assets/dashboard/';
+  const toggleImg = document.getElementById('toggle-img');
+  const exitImg = document.getElementById('exit-btn');
+
+  function applyTheme(dark) {
+    if (dark) {
+      body.setAttribute('data-theme', 'dark');
+      toggleImg.src = BASE + 'darkmodedark.png';
+      exitImg.src = BASE + 'exitarrow@2x.png';
+    } else {
+      body.setAttribute('data-theme', '');
+      toggleImg.src = BASE + 'lightmodelight.png';
+      exitImg.src = BASE + 'evilexitarrow@2x.png';
+    }
+  }
+
+  if (initial === 'dark') applyTheme(true);
+
+  toggle.addEventListener('click', () => {
+    const isDark = body.getAttribute('data-theme') === 'dark';
+    applyTheme(!isDark);
+    localStorage.setItem('site-theme', isDark ? 'light' : 'dark');
+
+    const poof = document.getElementById('poof-overlay');
+    const sprite = poof.querySelector('.poof-sprite');
+    sprite.style.animation = 'none';
+    void sprite.offsetWidth;
+    sprite.style.animation = '';
+    poof.classList.add('active');
+    setTimeout(() => poof.classList.remove('active'), 380);
+  });
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!localStorage.getItem('site-theme')) {
+      applyTheme(e.matches);
+    }
+  });
+</script>
+
+<div id="poof-overlay">
+  <div class="poof-sprite"></div>
+</div>
+</body>
+</html>
