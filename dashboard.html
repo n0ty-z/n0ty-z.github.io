@@ -4,8 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>dashboard</title>
+
+<link rel="preload" as="image" href="https://raw.githubusercontent.com/n0ty-z/n0ty-z.github.io/main/assets/dock/poof@2x.png">
+
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
 
   body {
     width: 100vw;
@@ -13,14 +16,46 @@
     background-repeat: repeat;
     background-size: auto;
     transition: background-image 0.3s ease;
-  }
-
-  body {
-    background-image: url('/assets/dashboard/defaultdesktop@2x.png');
+    background-image: url('https://raw.githubusercontent.com/n0ty-z/n0ty-z.github.io/main/assets/dashboard/defaultdesktop@2x.png');
   }
 
   body[data-theme="dark"] {
-    background-image: url('/assets/dashboard/ecsb_background_tile@2x.png');
+    background-image: url('https://raw.githubusercontent.com/n0ty-z/n0ty-z.github.io/main/assets/dashboard/ecsb_background_tile@2x.png');
+  }
+
+  #stickies-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  /* ── foreground buttons — fixed to viewport, immune to page zoom ── */
+  #toggle-img {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    width: 64px;
+    height: 64px;
+    cursor: pointer;
+    z-index: 1000;
+    opacity: 0.85;
+    -webkit-user-drag: none;
+  }
+
+  #bottom-left-btns {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+  }
+  #bottom-left-btns img {
+    width: 64px;
+    height: 64px;
+    opacity: 0.85;
+    -webkit-user-drag: none;
+    pointer-events: none;
   }
 
   #exit-btn {
@@ -30,22 +65,9 @@
     width: 64px;
     height: 64px;
     cursor: pointer;
-    z-index: 100;
+    z-index: 1000;
     opacity: 0.85;
-    transition: opacity 0.15s;
     -webkit-user-drag: none;
-    user-select: none;
-  }
-
-
-  #exit-btn:active {
-    transform: scale(0.97);
-  }
-
-  #stickies-container {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
   }
 
   #poof-overlay {
@@ -57,10 +79,7 @@
     justify-content: center;
     pointer-events: none;
   }
-
-  #poof-overlay.active {
-    display: flex;
-  }
+  #poof-overlay.active { display: flex; }
 
   .poof-sprite {
     position: fixed;
@@ -69,7 +88,7 @@
     width: 160vmax;
     height: 160vmax;
     transform: translate(-50%, -50%);
-    background-image: url('/assets/dock/poof@2x.png');
+    background-image: url('https://raw.githubusercontent.com/n0ty-z/n0ty-z.github.io/main/assets/dock/poof@2x.png');
     background-size: 100% 500%;
     background-position: center 0%;
     background-repeat: no-repeat;
@@ -88,68 +107,81 @@
 </head>
 <body>
 
-<img id="toggle-img" src="/assets/dashboard/lightmodelight.png" style="position:fixed;bottom:24px;left:24px;width:64px;height:64px;cursor:pointer;z-index:100;opacity:0.85;-webkit-user-drag:none;" draggable="false">
+<div id="stickies-container"></div>
 
-<div id="stickies-container">
+<img id="toggle-img"
+  src="https://raw.githubusercontent.com/n0ty-z/n0ty-z.github.io/main/assets/dashboard/lightmodelight.png"
+  draggable="false" alt="">
+
+<div id="bottom-left-btns">
+  <img id="plus-btn"
+    src="https://raw.githubusercontent.com/n0ty-z/n0ty-z.github.io/main/assets/dashboard/pluslightmode.png"
+    draggable="false" alt="">
+  <img id="minus-btn"
+    src="https://raw.githubusercontent.com/n0ty-z/n0ty-z.github.io/main/assets/dashboard/minuslightmode.png"
+    draggable="false" alt="">
 </div>
 
-<img
-  id="exit-btn"
-  src="/assets/dashboard/evilexitarrow@2x.png"
-  alt=""
-  draggable="false"
-  onclick="window.location.href='index.html'"
->
+<img id="exit-btn"
+  src="https://raw.githubusercontent.com/n0ty-z/n0ty-z.github.io/main/assets/dashboard/evilexitarrow@2x.png"
+  draggable="false" alt=""
+  onclick="window.location.href='index.html'">
+
+<div id="poof-overlay">
+  <div class="poof-sprite"></div>
+</div>
 
 <script>
-  const body = document.body;
-  const toggle = document.getElementById('toggle-img');
+  (function() { const i = new Image(); i.src = 'https://raw.githubusercontent.com/n0ty-z/n0ty-z.github.io/main/assets/dock/poof@2x.png'; })();
 
-  const saved = localStorage.getItem('site-theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const initial = saved || (prefersDark ? 'dark' : 'light');
-
-  const BASE = '/assets/dashboard/';
+  const BASE      = 'https://raw.githubusercontent.com/n0ty-z/n0ty-z.github.io/main/assets/dashboard/';
+  const body      = document.body;
   const toggleImg = document.getElementById('toggle-img');
-  const exitImg = document.getElementById('exit-btn');
+  const exitImg   = document.getElementById('exit-btn');
+  const minusBtn  = document.getElementById('minus-btn');
+  const plusBtn   = document.getElementById('plus-btn');
 
   function applyTheme(dark) {
     if (dark) {
       body.setAttribute('data-theme', 'dark');
       toggleImg.src = BASE + 'darkmodedark.png';
-      exitImg.src = BASE + 'exitarrow@2x.png';
+      exitImg.src   = BASE + 'exitarrow@2x.png';
+      minusBtn.src  = BASE + 'minusdarkmode.png';
+      plusBtn.src   = BASE + 'plusdarkmode.png';
     } else {
       body.setAttribute('data-theme', '');
       toggleImg.src = BASE + 'lightmodelight.png';
-      exitImg.src = BASE + 'evilexitarrow@2x.png';
+      exitImg.src   = BASE + 'evilexitarrow@2x.png';
+      minusBtn.src  = BASE + 'minuslightmode.png';
+      plusBtn.src   = BASE + 'pluslightmode.png';
     }
   }
 
-  if (initial === 'dark') applyTheme(true);
+  const saved = localStorage.getItem('site-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if ((saved || (prefersDark ? 'dark' : 'light')) === 'dark') applyTheme(true);
 
-  toggle.addEventListener('click', () => {
-    const isDark = body.getAttribute('data-theme') === 'dark';
-    applyTheme(!isDark);
-    localStorage.setItem('site-theme', isDark ? 'light' : 'dark');
-
-    const poof = document.getElementById('poof-overlay');
+  function triggerPoof() {
+    const poof   = document.getElementById('poof-overlay');
     const sprite = poof.querySelector('.poof-sprite');
     sprite.style.animation = 'none';
     void sprite.offsetWidth;
     sprite.style.animation = '';
     poof.classList.add('active');
     setTimeout(() => poof.classList.remove('active'), 380);
+  }
+
+  toggleImg.addEventListener('click', () => {
+    const isDark = body.getAttribute('data-theme') === 'dark';
+    applyTheme(!isDark);
+    localStorage.setItem('site-theme', isDark ? 'light' : 'dark');
+    triggerPoof();
   });
 
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-    if (!localStorage.getItem('site-theme')) {
-      applyTheme(e.matches);
-    }
+    if (!localStorage.getItem('site-theme')) applyTheme(e.matches);
   });
 </script>
 
-<div id="poof-overlay">
-  <div class="poof-sprite"></div>
-</div>
 </body>
 </html>
