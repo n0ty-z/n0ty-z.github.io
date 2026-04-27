@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #192d41;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.dock-container {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 700px;
+  height: 120px;
+}
+
+.dock-shadow {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%) perspective(300px) rotateX(30deg);
+  transform-origin: bottom center;
+  width: 100%;
+  height: 90px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.dock-shadow img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  display: block;
+}
+
+.dock-scurve {
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  right: 0;
+  height: 90px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2;
+}
+
+.dock-scurve img {
+  width: 100%;
+  height: 70%;
+  object-fit: fill;
+  transform: perspective(300px) rotateX(30deg);
+  transform-origin: bottom center;
+  display: block;
+}
+
+.dock-icons {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 15px;
+  z-index: 5;
+  padding: 0 14px;
+}
+
+.dock-icon {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dock-icon img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  display: block;
+  border-radius: 12px;
+}
+
+.dock-separator {
+  width: 15px;
+  height: 35px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dock-separator img {
+  width: 25px;
+  height: 140%;
+  object-fit: fill;
+  display: block;
+}
+
+.dock-frontline {
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.dock-frontline img {
+  width: 99.6%;
+  height: 3px;
+  object-fit: fill;
+  display: block;
+}
+</style>
+</head>
+<body>
+
+<div class="dock-container">
+
+  <div class="dock-shadow">
+    <img src="/main/assets/dock/wviconshadow%402x.png" />
+  </div>
+
+  <div class="dock-scurve">
+    <img src="/main/assets/dock/scurve-xl%402x.png" />
+  </div>
+
+  <div class="dock-icons">
+
+    <div class="dock-icon">
+      <img src="https://cdn.simpleicons.org/youtube/FF0000" title="YouTube" style="background-color: #ffffff;"/>
+    </div>
+
+    <div class="dock-icon">
+      <img src="https://cdn.simpleicons.org/spotify/1DB954" title="Spotify" style="background-color: #000000; border-radius: 30px;" />
+    </div>
+
+    <div class="dock-icon">
+      <img src="https://cdn.simpleicons.org/x/ffffff" title="Twitter/X" style="background-color: #000000; border-radius: 6px; padding: 4px;"/>
+    </div>
+
+    <div class="dock-icon">
+      <img src="https://cdn.simpleicons.org/tiktok/ffffff" title="TikTok" style="background-color: #ffffff; border-radius: 0%;"/>
+    </div>
+
+    <div class="dock-icon">
+      <img src="https://cdn.simpleicons.org/instagram/E1306C" title="Instagram" style="background:linear-gradient(135deg,#ca7c29,#e63ca2,#822163); border-radius: 15px;"/>
+    </div>
+
+    <div class="dock-icon">
+      <img src="https://cdn.simpleicons.org/discord/5865F2" title="Discord" style="border-radius: 0%; padding: -5px;"/>
+    </div>
+
+    <div class="dock-icon">
+      <img src="https://cdn.simpleicons.org/tumblr/36465D" title="Tumblr" style="background-color: #ffffff; border-radius: 0%;"/>
+    </div>
+
+    <div class="dock-separator">
+      <img src="/main/assets/dock/separator%402x.png" />
+    </div>
+
+    <div class="dock-icon">
+      <img src="https://cdn.simpleicons.org/github/ffffff" title="GitHub" style="background-color: #000000; border-radius: 25px;"/>
+    </div>
+
+  </div>
+
+  <div class="dock-frontline">
+    <img src="/main/assets/dock/frontline%402x.png" />
+  </div>
+
+</div>
+
+</body>
+</html>
